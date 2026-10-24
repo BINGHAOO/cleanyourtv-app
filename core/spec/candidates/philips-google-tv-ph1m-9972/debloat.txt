@@ -1,0 +1,45 @@
+# DRAFT, NOT TESTED. Philips Google TV TA1 / TA5 (PH1M_WW_9972, Android 14)
+# (ro.product.brand Philips, manufacturer TPV, model Philips Google TV TA1, device PH1M_WW_9972),
+# Android 14 (SDK 34), fingerprint Philips/PH1M_WW_9972/PH1M_WW_9972:14/UKN2.241117.001/3000518:user/release-keys
+# Also reported on Philips/PH1M_WW_9972_20/PH1M_WW_9972:14/UKN2.241117.001/3000518:user/release-keys
+# Also reported on Philips/PH1M_WW_9972_20/PH1M_WW_9972:14/UKN2.241117.001/3000669:user/release-keys
+# Drafted for cleanyourtv-app issues #44 #51 #144 from the TV report in #51,
+# starting from examples/philips-r8g-google-tv, examples/philips-smart-4k-google-tv.
+# The PH1M Google TV sets on Android 14; the R8G and Smart 4K lists are the Philips Google TV lists on
+# Android 14. The org.droidtv TV layer is left alone entirely.
+# Volunteers (ticked "I can try a list"): #51.
+# Every line below is a package a source list switches off and that this TV has. Nothing has been
+# tried on this TV yet.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/philips-google-tv-ph1m-9972/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/philips-google-tv-ph1m-9972/debloat.txt com.google.android.apps.tv.launcherx
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Home on the report: com.google.android.apps.tv.launcherx/.home.HomeActivity. Not in this list.
+# setupwraith is installed (default); the report says: home switch blocked WIZARD_STAYS_ON. Not in this list.
+# Home switch outlook if this became a profile: home switch possible only with setupwraith named and the takeover quirk; the wizard is on (blocked WIZARD_STAYS_ON).
+#
+# KEEP (never-disable on other lists, present here): com.android.devicelockcontroller, com.android.sdksandbox, com.dolby.android.audio.service, com.google.android.apps.mediashell, com.google.android.inputmethod.latin, com.google.android.katniss, com.google.android.tts, com.google.android.tv.remote.service, com.mediatek.android.tv.globalkeyoverlay, com.mediatek.dtv.tvinput.atsctuner, com.mediatek.extservice, com.mediatek.network, com.mediatek.tis and more.
+# Left alone although a source list switches them off: com.google.android.katniss (never-disable on aipro2k); com.google.android.apps.mediashell (never-disable on aipro2k); com.mediatek.dialservice (TV stack vendor package).
+# Vendor packages no source list names, left alone: com.dolby.android.audio.service, com.example.tvcontentprovider, com.mediatek.AirplayAPK, com.mediatek.airplaydaemon, com.mediatek.android.tv.globalkeyoverlay, com.mediatek.android.tv.mdns.offload, com.mediatek.android.tv.mdns.offload.overlay, com.mediatek.aowtis, com.mediatek.browservice, com.mediatek.dtv.tvinput.atsctuner, com.mediatek.dtv.tvinput.dvbtuner, com.mediatek.dtv.tvinput.isdbtuner, com.mediatek.extservice, com.mediatek.network, com.mediatek.partner.airplay_sys, com.mediatek.system.pqrepository.overlay.config and 117 more.
+# Already off on the report (switched off by the app's brand set or by the owner): com.google.android.feedback, com.google.android.play.games.
+#
+# To check before this goes upstream: Wi-Fi after a restart, the remote (every key, including
+# Input and the voice button, and pairing it again), every HDMI input, Live TV, casting.
+
+# Adverts, sponsored rows and partner auto-installs
+com.android.adservices.api                   # On-device advertising framework
+com.android.ondevicepersonalization.services # Personalizes ads on the device
+
+# Tracking, analytics and feedback
+com.android.federatedcompute.services        # Trains ad and usage models on the device
+com.android.tv.feedbackconsent               # Asks permission to send feedback
+com.google.android.feedback                  # Sends feedback and crash reports
+
+# Preloaded apps
+com.android.health.connect.backuprestore     # Backs up fitness data, for phones
+com.android.healthconnect.controller         # Fitness data hub, for phones
+com.google.android.play.games                # Google game app
+
+# Owner's choice (ask rows on the source lists): remove the # to switch off
+# com.google.android.apps.tv.dreamx          # Screensaver that mixes in recommendations

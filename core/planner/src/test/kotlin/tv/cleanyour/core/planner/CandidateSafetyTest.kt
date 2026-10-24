@@ -19,9 +19,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-// Test build (0.3.5-test1): a candidate list goes through every rule a tested list does, and for
-// the home screen switch's setup wizard rule it counts as no profile at all, so trying a list
-// that nobody tested never brings a switch the careful path would skip.
+// Test builds (0.3.5-test1, 0.3.6-beta1): a candidate list goes through every rule a tested list
+// does, and for the home screen switch's setup wizard rule it counts as no profile at all, so
+// trying a list that nobody tested never brings a switch the careful path would skip.
 class CandidateSafetyTest {
     private val tv = snapshot()   // the reference TV, its setup wizard installed and on
     private val noWizard = tv.copy(packages = tv.packages - wizard).let { it.copy(contentHash = SnapshotCodec.hash(it)) }
@@ -54,7 +54,7 @@ class CandidateSafetyTest {
         )
         assertEquals(emptyList(), problems)
         val candidates = bundle.profiles.filter { it.isCandidate }
-        assertEquals(9, candidates.size)
+        assertEquals(24, candidates.size)
         val refusedLines = mutableListOf<String>()
         for (p in candidates) for (g in p.groups.filter { it.default == GroupDefault.DISABLE }) for (e in g.packages)
             SwitchOffRule.reason(e.name, null, p, null, p.stockLaunchers)?.let { refusedLines += "${p.id} ${e.name.value}: $it" }

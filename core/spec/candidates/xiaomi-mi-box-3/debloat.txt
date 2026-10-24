@@ -1,0 +1,48 @@
+# DRAFT, NOT TESTED. Xiaomi Mi Box 3 (MIBOX3, once, Android 9)
+# (ro.product.brand Xiaomi, manufacturer Xiaomi, model MIBOX3, device once),
+# Android 9 (SDK 28), fingerprint Xiaomi/once/once:9/PI/3934:user/release-keys
+# Drafted for cleanyourtv-app issues #199 #224 #273 from the TV report in #273,
+# starting from examples/xiaomi-mi-box-s.
+# The Mi Box 3 (once) on Android 9; the Mi Box S list (oneday, Android 9) is the closest Xiaomi box.
+# Every switch-off row of that list is on this box.
+# Every line below is a package a source list switches off and that this TV has. Nothing has been
+# tried on this TV yet.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/xiaomi-mi-box-3/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/xiaomi-mi-box-3/debloat.txt com.google.android.tvlauncher
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Home on the report: com.google.android.tvlauncher/.MainActivity. Not in this list.
+# setupwraith is installed (default); the report says: home switch blocked WIZARD_STAYS_ON. Not in this list.
+# Home switch outlook if this became a profile: home switch possible only with setupwraith named and the takeover quirk; the wizard is on (blocked WIZARD_STAYS_ON).
+#
+# KEEP (never-disable on other lists, present here): com.google.android.apps.mediashell, com.google.android.inputmethod.latin, com.google.android.katniss, com.google.android.speech.pumpkin, com.google.android.tts, com.google.android.tv, com.google.android.tv.remote.service, com.netflix.ninja, com.xiaomi.android.tvsetup.partnercustomizer, com.xiaomi.mitv.res, mitv.service.
+# Left alone although a source list switches them off: com.google.android.tv (Live TV on verizon-stream-tv); com.google.android.katniss (never-disable on aipro2k); com.google.android.speech.pumpkin (never-disable on tcl-beyondtv2-latin-america); com.google.android.apps.mediashell (never-disable on aipro2k); com.google.android.tv.remote.service (never-disable on aipro2k); com.google.android.marvin.talkback (remote, pairing or accessibility (safety rule 8)).
+# Vendor packages no source list names, left alone: com.droidlogic, com.droidlogic.ble, com.droidlogic.overlay, com.xiaomi.mitv.res.
+# Already off on the report (switched off by the app's brand set or by the owner): com.mitv.tvhome.atv, com.mitv.tvhome.michannel, com.xm.webcontent, com.google.android.tvrecommendations, android.autoinstalls.config.xioami.mibox3, com.miui.tv.analytics, com.google.android.feedback, com.google.android.tv.bugreportsender, com.android.printspooler.
+#
+# To check before this goes upstream: Wi-Fi after a restart, the remote (every key, including
+# Input and the voice button, and pairing it again), every HDMI input, Live TV, casting.
+
+# Adverts, sponsored rows and partner auto-installs
+android.autoinstalls.config.xioami.mibox3    # Installs partner apps without asking
+com.google.android.tvrecommendations         # Promoted rows; also the notification panel and sign-in notices
+com.mitv.tvhome.atv                          # Xiaomi's home screen with adverts
+com.mitv.tvhome.michannel                    # Xiaomi content rows on the home screen
+com.xm.webcontent                            # Promo web content
+tv.alphonso.alphonso_eula                    # Recognises what you watch to target ads
+
+# Tracking, analytics and feedback
+com.google.android.feedback                  # Sends feedback and crash reports
+com.google.android.tv.bugreportsender        # Uploads bug reports to Google
+com.miui.tv.analytics                        # Reports what you watch to Xiaomi
+
+# Preloaded apps
+com.android.printspooler                     # Printing service a TV rarely needs
+
+# Owner's choice (ask rows on the source lists): remove the # to switch off
+# com.mitv.videoplayer                       # Xiaomi video player
+# com.mitv.milinkservice                     # Cast from Xiaomi phones
+# com.google.android.backdrop                # Google photo screensaver
+# com.xiaomi.mitv.updateservice              # Firmware and PatchWall updates
+# com.mitv.download.service                  # Download helper for the Mi updater

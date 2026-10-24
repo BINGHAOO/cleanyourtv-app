@@ -1,0 +1,84 @@
+# DRAFT, NOT TESTED. Sony BRAVIA 4K VH22 (Google TV, Android 12)
+# (ro.product.brand Sony, manufacturer Sony, model BRAVIA 4K VH22, device BRAVIA_VH22),
+# Android 12 (SDK 31), fingerprint Sony/BRAVIA_VH22_EU/BRAVIA_VH22:12/STT2.230505.001.S136/682241:user/release-keys
+# Also reported on Sony/BRAVIA_VH22_M_EU/BRAVIA_VH22:12/STT2.230505.001.S136/682241:user/release-keys
+# Also reported on Sony/BRAVIA_VH22_M_UC/BRAVIA_VH22:12/STT2.230505.001.S136/682241:user/release-keys
+# Drafted for cleanyourtv-app issues #46 #124 #293 from the TV report in #46,
+# starting from examples/sony-kd-55x85j, examples/sony-kd-65x80j.
+# The X85J (BRAVIA_VH2, Android 12) and X80J lists are the closest Sony Google TV lists; 24 of the
+# X80J list's 25 switch-off rows are on this TV. Most of them were already off with the Sony brand set.
+# Volunteers (ticked "I can try a list"): #46 #124.
+# Every line below is a package a source list switches off and that this TV has. Nothing has been
+# tried on this TV yet.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/sony-bravia-4k-vh22/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/sony-bravia-4k-vh22/debloat.txt com.google.android.apps.tv.launcherx
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Home on the report: com.google.android.apps.tv.launcherx/.home.HomeActivity. Not in this list.
+# setupwraith is installed (default); the report says: home switch blocked WIZARD_WIFI. Not in this list.
+# Home switch outlook if this became a profile: home switch possible only with setupwraith named and the takeover quirk; the wizard is on (blocked WIZARD_WIFI).
+#
+# KEEP (never-disable on other lists, present here): com.dolby.android.audio.service, com.google.android.apps.mediashell, com.google.android.inputmethod.latin, com.google.android.katniss, com.google.android.tts, com.google.android.tv.remote.service, com.mediatek.backgrounddetection, com.mediatek.network, com.netflix.ninja, com.sony.dtv.sonysystemservice, com.sony.dtv.tvapi, com.sony.dtv.tvx, com.uei.quicksetsdk.sony and more.
+# Left alone although a source list switches them off: com.sony.dtv.launcherxcustomizer (input, tuner, setup, launcher or factory role).
+# Already off from the factory (disabled), so not listed (restore.sh would turn them on): com.sony.dtv.b2b.vendorprotocol.
+# Vendor packages no source list names, left alone: com.dolby.android.audio.service, com.mediatek.agent, com.mediatek.backgrounddetection, com.mediatek.dmagent, com.mediatek.network, com.netflix.partner.ncm, com.sony.dtv.HomeTheatreControl, com.sony.dtv.accessibility.tutorial, com.sony.dtv.accessibilityshortcutframeworkoverlay, com.sony.dtv.acousticautocalibration, com.sony.dtv.all4launcher, com.sony.dtv.ardlauncher, com.sony.dtv.assistantadapter, com.sony.dtv.audiooutput, com.sony.dtv.audiosysteminfoprovider, com.sony.dtv.b2b.adminpassword and 109 more.
+# Already off on the report (switched off by the app's brand set or by the owner): com.sony.dtv.promos, com.sony.dtv.sonyselect, com.sony.dtv.sonytab, android.autoinstalls.config.sony.bravia, tv.samba.ssm, tv.samba.ssm.ui, com.qterics.da.product, com.sony.dtv.da.service, com.sonyericsson.idd.agent, com.sony.dtv.sonybugreportsys, com.google.android.feedback, com.sony.dtv.usercontext, com.sony.dtv.customersupport, com.sony.dtv.smarthelp, com.google.android.play.games, com.sony.dtv.demosupport, com.sony.dtv.demosystemsupport, com.sony.dtv.multiscreendemo, com.android.printspooler.
+#
+# To check before this goes upstream: Wi-Fi after a restart, the remote (every key, including
+# Input and the voice button, and pairing it again), every HDMI input, Live TV, casting.
+
+# Adverts, sponsored rows and partner auto-installs
+android.autoinstalls.config.sony.bravia      # Installs partner apps without asking
+com.sony.dtv.promos                          # Sony promotions
+com.sony.dtv.sonyselect                      # Sony app store and promos
+com.sony.dtv.sonytab                         # Sony partner content on the home screen
+
+# Tracking, analytics and feedback
+com.google.android.feedback                  # Sends feedback and crash reports
+com.google.android.partnersetup              # Tracks which partner set up the TV
+com.qterics.da.product                       # Remote support and device data
+com.sony.dtv.da.service                      # Remote support and device data
+com.sony.dtv.sonybugreportsys                # Sends bug reports to Sony
+com.sony.dtv.usercontext                     # Viewing context for recommendations
+com.sonyericsson.idd.agent                   # Device data agent
+tv.samba.ssm                                 # Reports what you watch
+tv.samba.ssm.ui                              # Opt-in and privacy screens for Samba TV
+
+# Preloaded apps
+com.android.printspooler                     # Printing service a TV rarely needs
+com.google.android.onetimeinitializer        # Leftover first-run setup tasks
+com.google.android.play.games                # Google game app
+com.sony.dtv.customersupport                 # Help tile
+com.sony.dtv.smarthelp                       # Help and support app
+
+# Brand extras
+com.sony.dtv.distancealert                   # BRAVIA CAM warns when you sit too close
+com.sony.dtv.sensingcamera.settings          # Settings for BRAVIA CAM
+
+# Shop and demo mode
+com.sony.dtv.demosupport                     # Shop demo support service
+com.sony.dtv.demosystemsupport               # Shop demo system service
+com.sony.dtv.multiscreendemo                 # Shop demo of multiple screens
+
+# Other background services
+com.google.android.syncadapters.calendar     # Syncs Google Calendar
+
+# Owner's choice (ask rows on the source lists): remove the # to switch off
+# com.sony.dtv.osat.music                    # Plays music from USB
+# com.sony.dtv.gestureapp                    # Hand gesture control with BRAVIA CAM
+# com.google.android.youtube.tvmusic         # Music streaming app
+# com.google.android.videos                  # Google's film store, recommendations and your purchased films
+# com.sonyericsson.dlna                      # DLNA media sharing service
+# com.sony.huey.dlna.module                  # DLNA media renderer
+# com.sony.huey.dlna.renderersettings        # Settings for the DLNA renderer
+# com.google.android.apps.tv.dreamx          # Screensaver that mixes in recommendations
+# com.sony.dtv.b2b.hotelmode                 # Hotel and pro mode service
+# com.sony.dtv.b2b.noderuntime.normal        # Node.js runtime for hotel mode apps
+# com.sony.dtv.b2b.noderuntime.privilege     # Privileged Node.js runtime for hotel apps
+# com.sony.dtv.b2b.noderuntimeextension.bpk  # Extension for the hotel mode runtime
+# com.sony.dtv.notificationcenter            # Sony notifications inbox
+# com.sony.dtv.QuickSetupCustomizer          # Partner settings for first setup
+# com.sonypicturescore                       # Sony film streaming app
+# com.sony.dtv.airplayapp                    # Receives AirPlay from Apple devices
+# com.sony.dtv.sensingcamera.fwupdate        # Firmware updates for BRAVIA CAM

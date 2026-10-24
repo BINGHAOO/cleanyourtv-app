@@ -1,0 +1,51 @@
+# DRAFT, NOT TESTED. Skyworth umeda on Android 14 (NobleSkiodo 2K NSTV, SWTV-22SA-FHD)
+# (ro.product.brand NobleSkiodo, manufacturer skyworth, model 2K NSTV, device umeda),
+# Android 14 (SDK 34), fingerprint NobleSkiodo/SW7_NobleSkiodo/umeda:14/UKNV.260211.001/14872057:user/release-keys
+# Also reported on skyworth/SW7_B/umeda:14/UKNV.260211.001/14872057:user/release-keys
+# Drafted for cleanyourtv-app issues #185 #215 #216 from the TV report in #185,
+# starting from examples/motorola-swtv-24ae-fhd, examples/skyworth-swtv-24na-4k-nf.
+# Skyworth umeda on Android 14 (also sold as NobleSkiodo); the Motorola SWTV-24AE list is a
+# Skyworth-built Google TV on Android 14 with the same com.smartdevice vendor apps.
+# Every line below is a package a source list switches off and that this TV has. Nothing has been
+# tried on this TV yet.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/skyworth-umeda-android14/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/skyworth-umeda-android14/debloat.txt com.google.android.apps.tv.launcherx
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Home on the report: com.google.android.apps.tv.launcherx/.home.HomeActivity. Not in this list.
+# setupwraith is installed (default); the report says: home switch blocked WIZARD_WIFI. Not in this list.
+# Home switch outlook if this became a profile: home switch possible only with setupwraith named and the takeover quirk; the wizard is on (blocked WIZARD_WIFI).
+#
+# KEEP (never-disable on other lists, present here): com.android.devicelockcontroller, com.android.sdksandbox, com.dolby.android.audio.service, com.google.android.apps.mediashell, com.google.android.inputmethod.latin, com.google.android.katniss, com.google.android.tts, com.google.android.tv.inputplayer, com.google.android.tv.remote.service, com.mediatek.android.tv.globalkeyoverlay, com.mediatek.tv.service, com.mediatek.tvinput, com.mediatek.wwtv.setupwizard and more.
+# Left alone although a source list switches them off: com.smartdevice.leanbacklauncher.customizer (input, tuner, setup, launcher or factory role); com.google.android.katniss (never-disable on aipro2k).
+# Vendor packages no source list names, left alone: com.coocaa.demonow.lightining, com.dolby.android.audio.service, com.mediatek.android.tv.globalkeyoverlay, com.mediatek.android.tv.mdns.offload.overlay, com.mediatek.bootlogoservice, com.mediatek.tv.inputplayeroverlay, com.mediatek.tv.oneworld.tvcenteroverlay, com.mediatek.tv.service, com.mediatek.tvinput.overlay, com.mediatek.wwtv.setupwizard, com.mediatek.wwtv.tvcenter, com.mediatek.wwtv.tvcenter.overlay, com.mediatek.wwtv.webview, com.mstar.android.tv.disclaimercustomization, com.sky.android.tv.globalkeyoverlay, com.skyworth.backligthadjust and 5 more.
+# Already off on the report (switched off by the app's brand set or by the owner): com.smartdevice.recommendation.
+#
+# To check before this goes upstream: Wi-Fi after a restart, the remote (every key, including
+# Input and the voice button, and pairing it again), every HDMI input, Live TV, casting.
+
+# Adverts, sponsored rows and partner auto-installs
+com.android.adservices.api                   # On-device advertising framework
+com.smartdevice.recommendation               # Content recommendation rows
+
+# Tracking, analytics and feedback
+com.android.federatedcompute.services        # Trains ad and usage models on the device
+com.android.ondevicepersonalization.services # Personalizes ads on the device
+com.android.tv.feedbackconsent               # Asks permission to send feedback
+com.google.android.feedback                  # Sends feedback and crash reports
+com.smartdevice.aftersale                    # Tracks boot, network and location
+com.smartdevice.recordactivation             # Records first activation
+
+# Preloaded apps
+com.Smartdevice.emanual                      # On-screen user manual
+com.android.health.connect.backuprestore     # Backs up fitness data, for phones
+com.android.healthconnect.controller         # Fitness data hub, for phones
+com.google.android.play.games                # Google game app
+
+# Brand extras
+com.smartdevice.dailymanage                  # Background service started at boot
+com.smartdevice.myapp                        # Skyworth apps screen
+
+# Owner's choice (ask rows on the source lists): remove the # to switch off
+# com.google.android.apps.tv.dreamx          # Screensaver that mixes in recommendations
