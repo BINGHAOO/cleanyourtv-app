@@ -76,6 +76,10 @@ class FullStoreTest {
         // 0.3.8-beta1 installs over 0.3.7: offered 0.3.8 and later, never 0.3.7 itself.
         assertEquals("", latest("0.3.7", "0.3.8-beta1"))
         assertEquals("0.3.8", latest("0.3.8", "0.3.8-beta1"))
+        // 0.3.8-beta2 installs over 0.3.8-beta1 and 0.3.7: offered 0.3.8 and later (0.4.0), never 0.3.7.
+        assertEquals("", latest("0.3.7", "0.3.8-beta2"))
+        assertEquals("0.3.8", latest("0.3.8", "0.3.8-beta2"))
+        assertEquals("0.4.0", latest("0.4.0", "0.3.8-beta2"))
     }
 
     @Test fun softwareUpdatesStayTheOwnersChoice() {

@@ -19,7 +19,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-// Test builds (0.3.5-test1, 0.3.6-beta1, 0.3.8-beta1): a candidate list goes through every rule a
+// Test builds (0.3.5-test1, 0.3.6-beta1, 0.3.8-beta1, 0.3.8-beta2): a candidate list goes through every rule a
 // tested list does, and for the home screen switch's setup wizard rule it counts as no profile at
 // all, so trying a list that nobody tested never brings a switch the careful path would skip.
 class CandidateSafetyTest {

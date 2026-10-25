@@ -14,7 +14,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-// Test builds (0.3.5-test1, 0.3.6-beta1, 0.3.8-beta1): the candidate lists in core/spec/candidates. They are
+// Test builds (0.3.5-test1, 0.3.6-beta1, 0.3.8-beta1, 0.3.8-beta2): the candidate lists in core/spec/candidates. They are
 // converted only with -Pcyt.candidates=true; these tests convert them directly, so they run in every build.
 class CandidatesTest {
     private val examples = File(Fixtures.upstreamDir, "examples")
