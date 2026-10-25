@@ -22,23 +22,33 @@ class CandidatesTest {
     private val unconverted = ProfileConverter.readUnconverted(File(Fixtures.repoRoot, "core/spec/upstream-feedback/unconverted.txt"))
     private val candidateDir = File(Fixtures.repoRoot, "core/spec/candidates")
     private val candidateMeta = File(candidateDir, "candidate-meta.json")
-    // In folder order: five of 0.3.5-test1 and eleven of 0.3.6-beta1. The others became tested lists in
+    // In folder order: five of 0.3.5-test1, eleven of 0.3.6-beta1 and twenty-seven drafted from the TV
+    // reports since (each for one reported TV, by device, brand or maker and one Android version, with
+    // the fingerprint prefix where the model name is a family name). The others became tested lists in
     // 0.3.7 (upstream v2.7.0) or match the same TV as one.
     private val ids = listOf(
-        "aurzen-boomair", "haier-android-tv-nippori", "oneplus-tv-c00-cebu", "philips-google-tv-ph1m-9972", "sharp-aquos-tve19a",
-        "skyworth-sw-22ae-nf", "smarttech-apollo-premium4k", "tcl-beyondtv-c02-4k", "tcl-g06-google-tv", "xiaomi-mi-tv-4a-android11",
-        "xiaomi-mitv-aesp0-android10", "xiaomi-mitv-afzp0", "xiaomi-mitv-axfu0", "xiaomi-mitv-axso2-android11", "xiaomi-mitv-mosr1",
-        "xiaomi-mitv4i-magnolia",
+        "amazon-fire-tv-cube-aftr", "aurzen-boomair", "bpl-ai-pont-samseong", "changhong-ai-pont-redwood-android14",
+        "changhong-ai-pont-samseong", "formovie-c025rgn-tianshan", "haier-android-tv-nippori", "kivi-4k-android-tv-bangbae",
+        "kogan-ai-pont-samseong", "nokia-android-tv-shandao", "oneplus-tv-c00-cebu", "oneplus-tv-dubai-android11",
+        "panasonic-tv-r2-scbc", "philips-google-tv-ph1m-9972", "realme-ai-pont-ikebukuro", "sharp-2k-smart-tv-a-beomil",
+        "sharp-aquos-tve19a", "skyworth-4k-google-tv-box-yda", "skyworth-globe-sa-android8", "skyworth-sw-22ae-nf",
+        "skyworth-swtv-20sa-sw4h", "skyworth-swtv-21ae-android11", "skyworth-swtv-22ae-fhd-android11",
+        "skyworth-swtv-24ae-fhd-beomil", "skyworth-swtv-shibuya", "smarttech-apollo-premium4k", "sony-bravia-4k-ur1",
+        "sony-bravia-vu3-4k", "tcl-beyondtv-c02-4k", "tcl-g06-google-tv",
+        "tdsystems-android-tv-redwood-android14", "toshiba-tv-hayward", "wansa-ai-pont-redwood", "xiaomi-mi-tv-4a-android11",
+        "xiaomi-mitv-aesp0-android10", "xiaomi-mitv-afzp0", "xiaomi-mitv-axfu0", "xiaomi-mitv-axso2-android11",
+        "xiaomi-mitv-mftr0-android14", "xiaomi-mitv-mosr1", "xiaomi-mitv-mtsu0", "xiaomi-mitv-nsop0", "xiaomi-mitv4i-magnolia",
     )
-    // The one candidate whose TV's own home is not a known Google launcher (PatchWall on the AFZP0):
-    // it names no stock home, so the home screen switch is refused and the list is clean-up only.
-    private val cleanUpOnly = setOf("xiaomi-mitv-afzp0")
+    // The candidates whose TV's own home is not a known Google or Amazon launcher (PatchWall on these
+    // Xiaomi sets): they name no stock home, so the home screen switch is refused and the list is
+    // clean-up only.
+    private val cleanUpOnly = setOf("xiaomi-mitv-afzp0", "xiaomi-mitv-mftr0-android14", "xiaomi-mitv-mtsu0", "xiaomi-mitv-nsop0")
 
     private fun without() = ProfileConverter.convert(examples, meta, "3e34f40", unconverted)
     private fun with() = ProfileConverter.convert(examples, meta, "3e34f40", unconverted, candidateDir, candidateMeta)
 
-    private fun facts(brand: String, model: String, device: String, sdk: Int) = DeviceFacts(
-        brand = brand, manufacturer = brand, model = model, device = device, serialLast4 = "0000", sdk = sdk, release = "x",
+    private fun facts(brand: String, model: String, device: String, sdk: Int, manufacturer: String = brand) = DeviceFacts(
+        brand = brand, manufacturer = manufacturer, model = model, device = device, serialLast4 = "0000", sdk = sdk, release = "x",
         fingerprint = "$brand/$device/$device:x/X/1:user/release-keys", abis = listOf("armeabi-v7a"), ramMb = 2048, hasGms = true,
         adbSecure = true, adbFeatures = setOf("shell_v2"), installRefusal = false, locale = "en",
     )
@@ -143,6 +153,27 @@ class CandidatesTest {
         // A Redmi-branded set of a Xiaomi list, by its maker; the Android 10 Mi TV 4A keeps its tested list.
         assertEquals("xiaomi-mi-tv-4a-android11", source.candidateFor(facts("Redmi", "MiTV-MOOQ3", "tarzan", 30).copy(manufacturer = "Xiaomi"))?.id)
         assertNull(source.candidateFor(facts("Xiaomi", "MiTV-MOOQ1", "tarzan", 29)))
+        // The AI PONT family name: one Changhong board under several brands, each its own list by the
+        // brand and the fingerprint prefix; another brand of the same board gets none.
+        fun aiPont(brand: String, product: String, device: String, sdk: Int, release: String) =
+            facts(brand, "AI PONT", device, sdk, manufacturer = "Changhong").copy(fingerprint = "$brand/$product/$device:$release/X/1:user/release-keys")
+        assertEquals("changhong-ai-pont-samseong", source.candidateFor(aiPont("Changhong", "DVB93", "samseong", 30, "11"))?.id)
+        assertEquals("bpl-ai-pont-samseong", source.candidateFor(aiPont("BPL", "DVB93BL", "samseong", 30, "11"))?.id)
+        assertEquals("kogan-ai-pont-samseong", source.candidateFor(aiPont("Kogan", "DVB93KG", "samseong", 30, "11"))?.id)
+        assertNull(source.candidateFor(aiPont("Kogan", "DVB93", "samseong", 30, "11")))
+        assertNull(source.candidateFor(aiPont("Wansa", "DVB92WS", "redwood", 34, "14")))
+        assertEquals("wansa-ai-pont-redwood", source.candidateFor(aiPont("Wansa", "DVB92WS", "redwood", 30, "11"))?.id)
+        assertEquals("changhong-ai-pont-redwood-android14", source.candidateFor(aiPont("Changhong", "DVB92", "redwood", 34, "14"))?.id)
+        // The same Hisense-built hayward board: the Toshiba set gets its candidate by the prefix.
+        assertEquals("toshiba-tv-hayward", source.candidateFor(facts("Toshiba", "Toshiba TV", "hayward", 30, manufacturer = "Hisense")
+            .copy(fingerprint = "Toshiba/huashan_emT/hayward:11/X/1:user/release-keys"))?.id)
+        // A model name that is the TV's own: the Android 11 MFTR0 keeps its tested list, the Android 14
+        // one gets the clean-up only candidate.
+        assertEquals("xiaomi-mitv-mftr0", (source.resolve(facts("Xiaomi", "MiTV-MFTR0", "freeguy", 30)) as ProfileResolution.Exact).profile.id)
+        assertEquals("xiaomi-mitv-mftr0-android14", source.candidateFor(facts("Xiaomi", "MiTV-MFTR0", "freeguy", 34))?.id)
+        // Fire OS: the Cube's candidate, matched by its model.
+        assertEquals("amazon-fire-tv-cube-aftr", source.candidateFor(facts("Amazon", "AFTR", "raven", 28))?.id)
+        assertNull(source.candidateFor(facts("Amazon", "AFTR", "raven", 30)))
         // Without consent wiring (the release graph before the test build), never a candidate.
         assertIs<ProfileResolution.BrandSureSet>(BundledProfileSource(bundle).resolve(magnolia))
     }

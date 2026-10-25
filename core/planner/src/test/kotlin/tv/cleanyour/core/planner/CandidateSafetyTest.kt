@@ -54,7 +54,7 @@ class CandidateSafetyTest {
         )
         assertEquals(emptyList(), problems)
         val candidates = bundle.profiles.filter { it.isCandidate }
-        assertEquals(16, candidates.size)
+        assertEquals(43, candidates.size)
         val refusedLines = mutableListOf<String>()
         for (p in candidates) for (g in p.groups.filter { it.default == GroupDefault.DISABLE }) for (e in g.packages)
             SwitchOffRule.reason(e.name, null, p, null, p.stockLaunchers)?.let { refusedLines += "${p.id} ${e.name.value}: $it" }

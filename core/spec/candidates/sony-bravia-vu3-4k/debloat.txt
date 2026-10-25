@@ -1,0 +1,61 @@
+# DRAFT, NOT TESTED. Sony BRAVIA VU3
+# (ro.product.brand Sony, manufacturer Sony, model BRAVIA VU3, device BRAVIA_VU3_4K),
+# Android 14 (SDK 34), fingerprint Sony/BRAVIA_VU3/BRAVIA_VU3_4K:14/UKR1.240726.001/386-60842:user/release-keys
+# Drafted for cleanyourtv-app issue #149 from the TV report in #149,
+# starting from examples/sony-bravia-vu31, examples/sony-kd-65x80j, plus the Sony careful set this TV already gets.
+# Every line below is a package a source list switches off by default (or the careful set
+# switches off) and that this TV has. Nothing has been tried on this TV yet.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/sony-bravia-vu3-4k/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/sony-bravia-vu3-4k/debloat.txt com.google.android.apps.tv.launcherx
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Home on the report: com.google.android.apps.tv.launcherx/.home.HomeActivity. Not in this list.
+# setupwraith is installed (default); the report says: home switch blocked WIZARD_WIFI. Not in this list.
+#
+# KEEP (never-disable on the source lists, the TV input, the home claimants, remote and pairing
+# packages present here): com.android.tv, com.realtek.dtv, com.realtek.tv.atv,
+# com.realtek.tv.passthrough, com.sony.dtv.sonysystemservice, com.sony.dtv.smartui,
+# com.realtek.advancesetting, com.sony.dtv.common.base.AccessibilityText,
+# com.sony.dtv.m2.seeds.iot.remotestart, com.sony.dtv.remotecontrolsettings.
+#
+# Left alone although a source list switches them off: com.google.android.partnersetup (input,
+# setup, launcher, voice, update or factory role), com.google.android.marvin.talkback (protected
+# list (Denylist)), com.sony.dtv.airplayapp (never-disable on sony-bravia-4k-ur3).
+# Off from the factory (disabled), so not listed (restore.sh would turn them on):
+# com.sony.dtv.b2b.vendorprotocol.
+# Off on the report already (by the careful set or the owner): com.sony.dtv.promos,
+# com.sony.dtv.sonyselect, com.sony.dtv.sonytab, com.google.android.feedback,
+# com.sony.dtv.smarthelp, com.google.android.play.games, com.android.printspooler,
+# com.sony.dtv.multiscreendemo.
+#
+# To check before this goes upstream: Wi-Fi after a restart, the remote (every key, including
+# Input and the voice button, and pairing it again), every HDMI input, Live TV, casting.
+
+# Adverts, sponsored rows and partner auto-installs
+android.autoinstalls.config.google.gtvpai    # Google TV partner installs
+com.android.adservices.api                   # Android ad services
+com.android.ondevicepersonalization.services # On-device personalization
+com.sony.dtv.promos                          # My BRAVIA promos
+com.sony.dtv.sonyselect                      # Sony Select
+com.sony.dtv.sonytab                         # Sony tab
+
+# Tracking, analytics and feedback
+com.android.federatedcompute.services        # Federated compute
+com.google.android.feedback                  # Google Feedback
+
+# Preloaded apps
+com.android.gallery3d                        # Gallery
+com.android.printspooler                     # Print spooler
+com.google.android.play.games                # Play Games
+com.sony.dtv.helpguidecontents               # Sony help guide
+com.sony.dtv.smarthelp                       # Sony Smart Help
+
+# Shop and demo mode
+com.sony.dtv.multiscreendemo                 # Sony multi-screen demo
+
+# Owner's choice (ask rows on the source lists or on other lists): remove the # to switch off
+# com.google.android.onetimeinitializer      # Google one-time setup
+# com.google.android.syncadapters.calendar   # Calendar sync
+# com.sonypicturescore                       # Sony Pictures Core
+# com.google.android.apps.tv.dreamx          # Google ambient mode
