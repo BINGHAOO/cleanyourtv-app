@@ -14,17 +14,25 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-// Test build (0.3.5-test1): the candidate lists in core/spec/candidates. They are converted only
-// with -Pcyt.candidates=true; these tests convert them directly, so they run in every build.
+// Test builds (0.3.5-test1, 0.3.6-beta1, 0.3.8-beta1): the candidate lists in core/spec/candidates. They are
+// converted only with -Pcyt.candidates=true; these tests convert them directly, so they run in every build.
 class CandidatesTest {
     private val examples = File(Fixtures.upstreamDir, "examples")
     private val meta = File(Fixtures.repoRoot, "core/spec/src/main/resources/tv/cleanyour/core/spec/profile-meta.json")
     private val unconverted = ProfileConverter.readUnconverted(File(Fixtures.repoRoot, "core/spec/upstream-feedback/unconverted.txt"))
     private val candidateDir = File(Fixtures.repoRoot, "core/spec/candidates")
     private val candidateMeta = File(candidateDir, "candidate-meta.json")
+    // In folder order: five of 0.3.5-test1 and eleven of 0.3.6-beta1. The others became tested lists in
+    // 0.3.7 (upstream v2.7.0) or match the same TV as one.
     private val ids = listOf(
-        "aurzen-boomair", "haier-android-tv-nippori", "sharp-aquos-tve19a", "smarttech-apollo-premium4k", "xiaomi-mitv4i-magnolia",
+        "aurzen-boomair", "haier-android-tv-nippori", "oneplus-tv-c00-cebu", "philips-google-tv-ph1m-9972", "sharp-aquos-tve19a",
+        "skyworth-sw-22ae-nf", "smarttech-apollo-premium4k", "tcl-beyondtv-c02-4k", "tcl-g06-google-tv", "xiaomi-mi-tv-4a-android11",
+        "xiaomi-mitv-aesp0-android10", "xiaomi-mitv-afzp0", "xiaomi-mitv-axfu0", "xiaomi-mitv-axso2-android11", "xiaomi-mitv-mosr1",
+        "xiaomi-mitv4i-magnolia",
     )
+    // The one candidate whose TV's own home is not a known Google launcher (PatchWall on the AFZP0):
+    // it names no stock home, so the home screen switch is refused and the list is clean-up only.
+    private val cleanUpOnly = setOf("xiaomi-mitv-afzp0")
 
     private fun without() = ProfileConverter.convert(examples, meta, "3e34f40", unconverted)
     private fun with() = ProfileConverter.convert(examples, meta, "3e34f40", unconverted, candidateDir, candidateMeta)
@@ -61,6 +69,7 @@ class CandidatesTest {
             assertTrue(p.tested!!.by!!.startsWith("candidate, issue #"), p.id)
             assertFalse(p.tested!!.rebootTested, p.id)
             assertEquals(p.match.sdkMin, p.match.sdkMax, "${p.id}: D-W4-14, the reported Android version only")
+            assertTrue(p.match.devices.isNotEmpty(), "${p.id}: matched by the reported device")
         }
         // The codec keeps the flag.
         assertEquals(bundle, ProfileBundleJson.decode(ProfileBundleJson.encode(bundle)))
@@ -120,6 +129,20 @@ class CandidatesTest {
         val boomair = facts("AURZEN", "BOOMAIR", "himalaya", 30)
         assertEquals("aurzen-boomair", source.candidateFor(boomair)?.id)
         assertIs<ProfileResolution.None>(source.resolve(boomair))
+        // Where the model name is a family name ("Smart TV") a list matches the device and build alone:
+        // the C02 firmware of the TCL BeyondTV gets its candidate, the tested AP06 firmware keeps its
+        // own list, another firmware or device gets neither.
+        val c02 = facts("TCL", "Smart TV", "BeyondTV", 28).copy(fingerprint = "TCL/C02_4K_US/BeyondTV:9/PPR1.180610.011/AP12:user/release-keys")
+        assertEquals("tcl-beyondtv-c02-4k", source.candidateFor(c02)?.id)
+        assertNull(source.candidateFor(c02.copy(fingerprint = "TCL/C02_4K_US/BeyondTV:9/PPR1.180610.011/AP08:user/release-keys")))
+        val ap06 = c02.copy(model = "BeyondTV", fingerprint = "TCL/BeyondTV/BeyondTV:9/PPR1.180610.011/AP06:user/release-keys")
+        assertNull(source.candidateFor(ap06))
+        assertEquals("tcl-beyondtv-rt2851", (source.resolve(ap06) as ProfileResolution.Exact).profile.id)
+        assertEquals("tcl-g06-google-tv", source.candidateFor(facts("TCL", "Smart TV", "G06", 30))?.id)
+        assertNull(source.candidateFor(facts("TCL", "Smart TV", "unknown", 30)))
+        // A Redmi-branded set of a Xiaomi list, by its maker; the Android 10 Mi TV 4A keeps its tested list.
+        assertEquals("xiaomi-mi-tv-4a-android11", source.candidateFor(facts("Redmi", "MiTV-MOOQ3", "tarzan", 30).copy(manufacturer = "Xiaomi"))?.id)
+        assertNull(source.candidateFor(facts("Xiaomi", "MiTV-MOOQ1", "tarzan", 29)))
         // Without consent wiring (the release graph before the test build), never a candidate.
         assertIs<ProfileResolution.BrandSureSet>(BundledProfileSource(bundle).resolve(magnolia))
     }
@@ -135,7 +158,7 @@ class CandidatesTest {
         for (p in bundle.profiles.filter { it.isCandidate }) {
             assertNull(p.setupWraith, p.id)
             assertFalse(Quirk.HOME_TAKEOVER_SETUPWRAITH in p.quirks, p.id)
-            assertTrue(p.stockLaunchers.isNotEmpty(), p.id)
+            assertEquals(p.id in cleanUpOnly, p.stockLaunchers.isEmpty(), p.id)
             for (g in p.groups.filter { it.default == GroupDefault.DISABLE }) for (e in g.packages) {
                 val pkg = e.name
                 if (facts.lookup(pkg)?.category == "accessibility" || pkg.value.split('.').drop(1).any { words.containsMatchIn(it.lowercase()) }) offenders += "${p.id} ${pkg.value}"
